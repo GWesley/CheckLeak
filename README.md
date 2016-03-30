@@ -1,3 +1,6 @@
+add @weakify support
+make console info more clean
+
 # CheckLeak
 检测iOS项目里面的内存泄露（block）
 
