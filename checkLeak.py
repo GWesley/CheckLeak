@@ -11,7 +11,7 @@ from datetime import date, time, datetime, timedelta
 projectPath = "/Users/zhangzhiyong-pd/Projects/haosou_ios/MSearch"
 #不检测路径
 noPath = ['ThirdParty']
-#False:检测所有,True:不检测不检测路径和动画产生的self
+#False:检测所有,True:不检测不检测路径和动画产生的self, 不检查strongify, 不检查dispathOnce
 NormalCheck = True
 
 def notify(self, title, subtitle, text, url):
@@ -139,6 +139,8 @@ def getFileContent(path):
                         if all_the_text[temp-11:temp] == 'completion:' and all_the_text[temp+1:temp+16] == '(BOOL finished)':
                             temp=-1
                         if all_the_text.find('@strongify') != -1 :
+                            temp=-1
+                        if all_the_text.lower().find('@instance') != -1 :
                             temp=-1
                 if temp == -1 or temp == lastTemp:
                     break
