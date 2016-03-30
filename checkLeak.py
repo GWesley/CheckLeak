@@ -8,9 +8,9 @@ import AppKit
 from datetime import date, time, datetime, timedelta
 
 #工程路径
-projectPath = "/Users/yuyang/Documents/techwolf/mobile_ios"
+projectPath = "/Users/zhangzhiyong-pd/Projects/haosou_ios/MSearch"
 #不检测路径
-noPath = ['ThirdLibs','iosTools']
+noPath = ['ThirdParty']
 #False:检测所有,True:不检测不检测路径和动画产生的self
 NormalCheck = True
 
@@ -27,13 +27,13 @@ def notify(self, title, subtitle, text, url):
     notification.setUserInfo_({"action":"open_url", "value":url})
     NSUserNotificationCenter.defaultUserNotificationCenter().setDelegate_(self)
     NSUserNotificationCenter.defaultUserNotificationCenter().scheduleNotification_(notification)
-    
+
 def userNotificationCenter_didActivateNotification_(self, center, notification):
     userInfo = notification.userInfo()
     if userInfo["action"] == "open_url":
         import subprocess
         subprocess.Popen(['open', userInfo["value"]])
-        
+
 def runTask(func, day=0, hour=0, min=0, second=0):
   # Init time
   now = datetime.now()
@@ -60,7 +60,7 @@ def runTask(func, day=0, hour=0, min=0, second=0):
           print "next_iter: %s" % strnext_time
           # Continue next iteration
           continue
-          
+
 #get all files
 def scan_files(directory,prefix=None,postfix=None,exceptPath=None):
     files_list=[]
@@ -87,7 +87,7 @@ def scan_files(directory,prefix=None,postfix=None,exceptPath=None):
                 addStr(os.path.join(root,special_file))
 
     return files_list
-    
+
 #remove note
 def removeNote(content):
     text = content
@@ -109,13 +109,13 @@ def removeNote(content):
             left = -1
             right = -1
     return text
-    
+
 #tell weather is legal or not
 def isLegal(content):
     if content=='_' or content.isdigit() or content.isalpha():
         return False
     return True
-    
+
 #get file content
 def getFileContent(path):
     if path.strip()=='':
@@ -127,7 +127,7 @@ def getFileContent(path):
         all_the_text=removeNote(all_the_text)
         i = int(all_the_text.find('^'))
         if i > -1 and i < len(all_the_text):
-            print("--------------in File:" + path + "---------------")
+            # print("--------------in File:" + path + "---------------")
             i=0
             lastTemp=0
             while (i<len(all_the_text)):
@@ -137,6 +137,8 @@ def getFileContent(path):
                         if all_the_text[temp-11:temp] == 'animations:':
                             temp=-1
                         if all_the_text[temp-11:temp] == 'completion:' and all_the_text[temp+1:temp+16] == '(BOOL finished)':
+                            temp=-1
+                        if all_the_text.find('@strongify') != -1 :
                             temp=-1
                 if temp == -1 or temp == lastTemp:
                     break
@@ -170,6 +172,7 @@ def getFileContent(path):
                                         if all_the_text[m]=='\n':
                                             num+=1
                                     if num>lastNum:
+                                        print("--------------in File:" + path.split('/').pop() + "---------------")
                                         outputStr = 'num:' + str(num) + ' maybe have self !!!!!'
                                         print outputStr
                                         notiStr = path.split('/')[len(path.split('/')) - 1] + '\n' + outputStr
@@ -187,7 +190,7 @@ def getFileContent(path):
     finally:
         file_object.close()
     return
-    
+
 #get the path
 def start():
     print("===============path==============")
@@ -198,8 +201,8 @@ def start():
         excPath=noPath
     files_list=scan_files(projectPath,postfix=".m",exceptPath=excPath)
     print("=============all " + str(len(files_list)) + " files==========")
-    for filePath in files_list:
-        print filePath
+    # for filePath in files_list:
+    #     print filePath
     print("==============================================================")
     for filePath in files_list:
         getFileContent(filePath)
